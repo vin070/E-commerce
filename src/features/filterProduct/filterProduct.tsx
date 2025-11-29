@@ -130,7 +130,7 @@ function FilterProduct() {
     return (
         <>
             <button className="btn-success" onClick={() => closeModal(!showFilter)}>
-                <img src="src/_assets/svg/funnel.svg" alt="Filter" />
+                <img src="assets/svg/funnel.svg" alt="Filter" />
                 <span>Filter</span>
             </button>
 

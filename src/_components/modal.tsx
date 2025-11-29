@@ -26,7 +26,7 @@ function Modal({ children, container, heading, cancelCallback, submitCallback, s
         <div className='modal-container' style={style}>
             <div className='header'>
                 <h2>{heading}</h2>
-                <img onClick={() => cancelCallback()} src="src/_assets/svg/close.svg" alt="Close" />
+                <img onClick={() => cancelCallback()} src="assets/svg/close.svg" alt="Close" />
             </div>
             {children}
             <div className='footer'>

@@ -17,7 +17,7 @@ function ManageFavouriteProduct({ productID }: AddProductToFavouriteProp) {
     }
 
     return (
-        <img onClick={() => updateFavouriteProduct()} src={favouriteProductsID.hasOwnProperty(productID) ? 'src/_assets/svg/suitHeart.svg' : 'src/_assets/svg/fillSuitHeart.svg'} />
+        <img onClick={() => updateFavouriteProduct()} src={favouriteProductsID.hasOwnProperty(productID) ? 'assets/svg/suitHeart.svg' : 'assets/svg/fillSuitHeart.svg'} />
     )
 
 }

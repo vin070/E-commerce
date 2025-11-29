@@ -21,7 +21,7 @@ function MiniProductDetails({ imgageURL, rating, observer }: MiniProductDetails)
         <div className="productThumbnail">
             <img className='productImage' ref={ref} data-url={imgageURL} />
             <div className="rating">
-                <img src="src/_assets/svg/star.svg" alt="Rating" />
+                <img src="assets/svg/star.svg" alt="Rating" />
                 <span>{rating}/{window.config.maxRating}</span>
             </div>
         </div>
