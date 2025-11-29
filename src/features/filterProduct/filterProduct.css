@@ -1,0 +1,89 @@
+.btn-success {
+    display: flex;
+    gap: 4px;
+    background-color: white;
+    color: black;
+    border: 2px solid #6c6c6c;
+    border-radius: 4px;
+}
+
+.btn-success img {
+    max-height: 20px;
+    max-width: 20px;
+    height: auto;
+    width: auto;
+}
+
+#categoryContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+}
+
+#categoryContainer>.category {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    gap: 4px;
+}
+
+#categoryContainer>.category * {
+    cursor: pointer;
+}
+
+#filterContainer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+}
+
+#filterContainer>div:nth-child(1) {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+}
+
+#filterContainer>div:nth-child(2) {
+    width: 75%;
+    height: 100%;
+}
+
+.category input[type="checkbox"] {
+    /* Hide default appearance */
+    appearance: none;
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid #555;
+    border-radius: 4px;
+    background: #fff;
+    /* white background */
+    cursor: pointer;
+    position: relative;
+    margin-right: 8px;
+}
+
+/* Checked state */
+.category input[type="checkbox"]:checked {
+    background: #fff;
+    /* still white */
+    border-color: #000;
+    /* darker border when checked */
+}
+
+/* Checkmark */
+.category input[type="checkbox"]:checked::after {
+    content: "✔";
+    font-size: 14px;
+    color: #000;
+    position: absolute;
+    top: -2px;
+    left: 2px;
+}
