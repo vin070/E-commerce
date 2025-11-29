@@ -1,11 +1,10 @@
 import { useState } from "react"
+import { Range } from "react-range"
 import { useDispatch, useSelector } from "react-redux"
-import Slider from "react-slick"
 import Modal from "../../_components/modal"
 import { type AppDispatch, type RootState } from "../../store/store"
 import { filter } from "../productList"
 import './filterProduct.css'
-import { Range } from "react-range";
 
 
 

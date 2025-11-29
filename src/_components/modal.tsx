@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import './modal.css'
 
 interface ModalProp extends PropsWithChildren {
-    container: HTMLElement | null,
+    container: any,
     heading: string,
     cancelCallback: Function,
     submitCallback: Function,
