@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { usePagination } from "../../_customHook";
-import { store, type AppDispatch, type RootState } from "../../store/store";
+import { store, useAppSelector, type AppDispatch } from "../../store/store";
 import FilterProduct from "../filterProduct/filterProduct";
 import MiniProductDetails from "../miniProductDetails/miniProductDetails";
 import Sort from "../sorting/sorting";
 import './productList.css';
 import { fetchProducts, type fetchProductsArg } from './store/hook';
-import type { initialStateType } from "./store/slice";
 import { imagesBlobURL as imagesBlobURLAction } from "./store/slice";
 
 const limit = 20
@@ -16,10 +15,9 @@ export function ProductList() {
     const useAppDispatch = useDispatch<AppDispatch>()
     const intersectionObserverRef = useRef<IntersectionObserver>(null);
 
-    const productList = useSelector<RootState>(state => state.productList.data) as initialStateType["data"];
-    const filter = useSelector<RootState>(state => state.productList.filter) as initialStateType["filter"];
-    const sortBy = useSelector<RootState>(state => state.productList.sortBy) as initialStateType["sortBy"];
-    // const imagesBlobURL = useSelector<RootState>(state => state.productList.imagesBlobURL) as initialStateType["imagesBlobURL"];
+    const productList = useAppSelector(state => state.productList.data);
+    const filter = useAppSelector(state => state.productList.filter);
+    const sortBy = useAppSelector(state => state.productList.sortBy);
     const { paginationConfig, updatePaginationConfig } = usePagination(limit, productList.total)
 
     const callback = useCallback(async (entries: IntersectionObserverEntry[], _: IntersectionObserver) => {
@@ -72,10 +70,10 @@ export function ProductList() {
         const filteredProduct = productList.data
             .filter((product) => {
                 const { rating, category } = product;
-                if (rating >= filter.rating && !filter.category?.length) {
+                if (rating >= filter.rating && !filter.category?.size) {
                     return true
                 }
-                else if (rating >= filter.rating && filter.category?.length && filter.category.indexOf(category) !== -1) {
+                else if (rating >= filter.rating && filter.category.size && filter.category[category]) {
                     return true;
                 }
                 return false;

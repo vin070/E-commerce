@@ -1,36 +1,33 @@
 import { useState } from "react"
 import { Range } from "react-range"
-import { useDispatch, useSelector } from "react-redux"
-import Modal from "../../_components/modal"
-import { type AppDispatch, type RootState } from "../../store/store"
-import { filter } from "../productList"
+import { useDispatch } from "react-redux"
+import Modal from "../../_components/modal/modal"
+import { filterEnum } from "../../_models/filter.enum"
+import { useAppSelector, type AppDispatch } from "../../store/store"
+import { filter, type initialStateType } from "../productList"
 import './filterProduct.css'
 
-
-
 const filterType = [
-    { text: 'Category', value: 'CATEGORY' },
-    { text: 'Rating', value: 'RATING' },
+    { text: 'Category', value: filterEnum.CATEGORY },
+    { text: 'Rating', value: filterEnum.RATING },
 ]
 
 function FilterProduct() {
     const [showFilter, setShowFilter] = useState<boolean>(false);
-    const [filterDetails, setFilterDetails] = useState<{
-        category: { [key: string]: boolean };
-        rating: number;
-    }>({
+    const [filterDetails, setFilterDetails] = useState<initialStateType["filter"]>({
         category: {},
         rating: 0
     })
 
     const [selectedFilter, setSelectedFilter] = useState<string>(filterType[0].value);
     const dispatch = useDispatch<AppDispatch>()
-    const categories = useSelector<RootState>(state => state.productList.category) as string[];
+    const categories = useAppSelector(state => state.productList.category) as string[];
 
     const closeModal = (showFilter: boolean) => {
         setShowFilter(showFilter)
     }
 
+    //TODO: Fix any type
     const updateSelectedTypeFilter = (ev: any) => {
         setSelectedFilter((ev as any).target.getAttribute('data-value'))
     }
@@ -49,7 +46,7 @@ function FilterProduct() {
     }
 
     const handleSubmit = () => {
-        dispatch(filter({ filter: { category: Object.keys(filterDetails.category), rating: filterDetails.rating } }))
+        dispatch(filter(filterDetails))
         closeModal(false)
     }
 
@@ -60,7 +57,7 @@ function FilterProduct() {
                     categories.map((category, i) => {
                         return (
                             <div className="category" key={i}>
-                                <input checked={Boolean(filterDetails.category[category])} type="checkbox" id={i.toString()} onChange={(ev) => updateCategoryFilter(category, (ev.target as HTMLInputElement).checked)} />
+                                <input checked={filterDetails.category[category]} type="checkbox" id={i.toString()} onChange={(ev) => updateCategoryFilter(category, (ev.target as HTMLInputElement).checked)} />
                                 <label htmlFor={i.toString()}>{category}</label>
                             </div>
                         )
@@ -120,8 +117,8 @@ function FilterProduct() {
                     }
                 </div>
                 <div>
-                    {selectedFilter === "CATEGORY" && <CategoryUI />}
-                    {selectedFilter === "RATING" && <RatingUI />}
+                    {selectedFilter === filterEnum.CATEGORY && <CategoryUI />}
+                    {selectedFilter === filterEnum.RATING && <RatingUI />}
                 </div>
             </div>
         )

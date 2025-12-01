@@ -1,28 +1,31 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { fetchProducts, type Product } from "./hook";
 
+interface filterType {
+    category: { [key: string]: true };
+    rating: number;
+}
+
+interface imagesBlobURL {
+    [key: string]: {
+        isLoading: boolean,
+        URL?: string
+    }
+}
+
 export interface initialStateType {
-    filter: {
-        category: string[];
-        rating: number;
-    },
+    filter: filterType,
     sortBy: string,
     loading: boolean,
     data: { total: number, data: Product[] },
     error: string,
     favouriteProductsID: { [key: number]: boolean };
     category: string[],
-    imagesBlobURL: {
-        [key: string]: {
-            isLoading: boolean,
-            URL?: string
-        }
-    }
+    imagesBlobURL: imagesBlobURL
 }
-
 const initialState: initialStateType = {
     filter: {
-        category: [],
+        category: {},
         rating: 0
     },
     sortBy: "ASCENDING",
@@ -38,8 +41,8 @@ const slice = createSlice({
     name: "productList",
     initialState: initialState,
     reducers: {
-        filter: (state, { payload }: PayloadAction<{ filter: initialStateType["filter"] }>) => {
-            state.filter = payload.filter
+        filter: (state, { payload }: PayloadAction<initialStateType["filter"]>) => {
+            state.filter = payload
         },
         sort: (state, { payload }: PayloadAction<string>) => {
             state.sortBy = payload

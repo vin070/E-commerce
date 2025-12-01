@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
-import { type AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { useAppSelector, type AppDispatch, type RootState } from "../../store/store";
 import { manageFavourite } from "../productList";
-import { type RootState } from "../../store/store";
 
 
 interface AddProductToFavouriteProp {
@@ -9,8 +8,7 @@ interface AddProductToFavouriteProp {
 }
 function ManageFavouriteProduct({ productID }: AddProductToFavouriteProp) {
     const dispatch = useDispatch<AppDispatch>();
-    //TODO: Fix any data type 
-    const favouriteProductsID: any = useSelector<RootState>((state: RootState) => state.productList.favouriteProductsID)
+    const favouriteProductsID = useAppSelector((state: RootState) => state.productList.favouriteProductsID)
 
     const updateFavouriteProduct = () => {
         dispatch(manageFavourite(productID))
