@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { category } from "./slice";
+import config from "../../../_environment/config";
 
 export interface fetchProductsArg {
     limit: number,
@@ -31,7 +32,7 @@ export const fetchProducts = createAsyncThunk(
         const { dispatch, signal } = thunkAPI;
         const { limit, offset, attributeName } = payload;
         try {
-            let URL = `https://dummyjson.com/products?skip=${offset}&limit=${limit}`
+            let URL = `${config.API_BASE_URL}/products?skip=${offset}&limit=${limit}`
             if (attributeName) {
                 URL += `&select=${attributeName}`
             }
