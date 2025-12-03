@@ -1,4 +1,4 @@
 * ~~env~~
-* react/svgr
+* ~~react/svgr~~
 * virtual scroll
 * throttling
