@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { } from './MiniProductDetails.css'
+import './MiniProductDetails.css'
+import { StarIcon } from '../../_svg';
+import Icon from '../../_components/icon/icon'
 
 interface MiniProductDetails {
     imgageURL: string,
@@ -21,7 +23,7 @@ function MiniProductDetails({ imgageURL, rating, observer }: MiniProductDetails)
         <div className="productThumbnail">
             <img className='productImage' ref={ref} data-url={imgageURL} />
             <div className="rating">
-                <img src="assets/svg/star.svg" alt="Rating" />
+                <Icon src={StarIcon} fillColour='yellow' />
                 <span>{rating}/{window.config.maxRating}</span>
             </div>
         </div>

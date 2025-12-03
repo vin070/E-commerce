@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
+import Icon from "../../_components/icon/icon";
+import { FillSuitHeartIcon, SuitHeartIcon } from '../../_svg';
 import { useAppSelector, type AppDispatch, type RootState } from "../../store/store";
 import { manageFavourite } from "../productList";
-
 
 interface AddProductToFavouriteProp {
     productID: number,
@@ -15,7 +16,7 @@ function ManageFavouriteProduct({ productID }: AddProductToFavouriteProp) {
     }
 
     return (
-        <img onClick={() => updateFavouriteProduct()} src={favouriteProductsID.hasOwnProperty(productID) ? 'assets/svg/suitHeart.svg' : 'assets/svg/fillSuitHeart.svg'} />
+        <Icon onClick={() => updateFavouriteProduct()} src={favouriteProductsID.hasOwnProperty(productID) ? SuitHeartIcon : FillSuitHeartIcon} />
     )
 
 }

@@ -6,7 +6,8 @@ import { filterEnum } from "../../_models/filter.enum"
 import { useAppSelector, type AppDispatch } from "../../store/store"
 import { filter, type initialStateType } from "../productList"
 import './filterProduct.css'
-
+import Icon from '../../_components/icon/icon'
+import { FunnelIcon } from '../../_svg'
 const filterType = [
     { text: 'Category', value: filterEnum.CATEGORY },
     { text: 'Rating', value: filterEnum.RATING },
@@ -27,8 +28,7 @@ function FilterProduct() {
         setShowFilter(showFilter)
     }
 
-    //TODO: Fix any type
-    const updateSelectedTypeFilter = (ev: any) => {
+    const updateSelectedTypeFilter = (ev: React.MouseEvent<HTMLDivElement>) => {
         setSelectedFilter((ev as any).target.getAttribute('data-value'))
     }
 
@@ -127,7 +127,7 @@ function FilterProduct() {
     return (
         <>
             <button className="btn-success" onClick={() => closeModal(!showFilter)}>
-                <img src="assets/svg/funnel.svg" alt="Filter" />
+                <Icon src={FunnelIcon} />
                 <span>Filter</span>
             </button>
 

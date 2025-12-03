@@ -1,6 +1,9 @@
 import { useEffect, type CSSProperties, type PropsWithChildren } from 'react'
 import { createPortal } from 'react-dom'
 import './modal.css'
+import { CloseIcon } from '../../_svg'
+
+import Icon from '../icon/icon'
 
 interface ModalProp extends PropsWithChildren {
     //TODO: fix any container type 
@@ -27,7 +30,7 @@ function Modal({ children, container, heading, cancelCallback, submitCallback, s
         <div className='modal-container' style={style}>
             <div className='header'>
                 <h2>{heading}</h2>
-                <img onClick={() => cancelCallback()} src="assets/svg/close.svg" alt="Close" />
+                <Icon src={CloseIcon} onClick={() => cancelCallback()} style={{ cursor: "pointer" }} />
             </div>
             {children}
             <div className='footer'>
