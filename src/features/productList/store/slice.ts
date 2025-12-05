@@ -42,7 +42,8 @@ const slice = createSlice({
     initialState: initialState,
     reducers: {
         filter: (state, { payload }: PayloadAction<initialStateType["filter"]>) => {
-            state.filter = { ...payload }
+            payload = { category: { ...payload.category }, rating: payload.rating }
+            state.filter = payload
         },
         sort: (state, { payload }: PayloadAction<string>) => {
             state.sortBy = payload
