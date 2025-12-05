@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePagination } from "../../_customHook";
 import { store, useAppSelector, type AppDispatch } from "../../store/store";
@@ -65,19 +65,19 @@ export function ProductList() {
         };
     }, [paginationConfig.offset])
 
-    const getTransformmedResult = useCallback(() => {
+    const transformmedProductList = useMemo(() => {
         //Filter the product first
-        const filteredProduct = productList.data
-            .filter((product) => {
-                const { rating, category } = product;
-                if (rating >= filter.rating && !filter.category?.size) {
-                    return true
-                }
-                else if (rating >= filter.rating && filter.category.size && filter.category[category]) {
-                    return true;
-                }
-                return false;
-            });
+        const categorySize = Object.keys(filter.category).length
+        const filteredProduct = productList.data.filter((product) => {
+            const { rating, category } = product;
+            if (rating >= filter.rating && !categorySize) {
+                return true
+            }
+            else if (rating >= filter.rating && categorySize && filter.category[category]) {
+                return true;
+            }
+            return false;
+        });
 
         //Sort the product first
         filteredProduct.sort((a, b) => {
@@ -87,7 +87,7 @@ export function ProductList() {
             return b.price - a.price
         })
         return filteredProduct;
-    }, [productList, filter, sortBy]);
+    }, [JSON.stringify(productList.data), JSON.stringify(filter), sortBy]);
 
     const handleOnScrollEvent = (ev: any) => {
         const { scrollTop, clientHeight, scrollHeight } = (ev.target as any)
@@ -104,7 +104,7 @@ export function ProductList() {
             </div>
             <div id="productList" onScroll={ev => handleOnScrollEvent(ev)}>
                 {
-                    getTransformmedResult().map((product, i) => {
+                    transformmedProductList.map((product, i) => {
                         const { title, price, discountPercentage, rating, thumbnail } = product
                         return (
                             <div className="product" key={i}>
