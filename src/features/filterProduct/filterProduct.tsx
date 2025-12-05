@@ -22,7 +22,7 @@ function FilterProduct() {
 
     const [selectedFilter, setSelectedFilter] = useState<string>(filterType[0].value);
     const dispatch = useDispatch<AppDispatch>()
-    const categories = useAppSelector(state => state.productList.category) as string[];
+    const categories = useAppSelector(state => state.productList.category);
 
     const closeModal = (showFilter: boolean) => {
         setShowFilter(showFilter)

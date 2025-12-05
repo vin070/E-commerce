@@ -1,27 +1,16 @@
-import { useEffect, useRef } from 'react'
-import './MiniProductDetails.css'
+import Icon from '../../_components/icon/icon';
 import { StarIcon } from '../../_svg';
-import Icon from '../../_components/icon/icon'
+import './MiniProductDetails.css';
 
 interface MiniProductDetails {
     imgageURL: string,
     rating: number,
-    observer: IntersectionObserver | null
 }
-function MiniProductDetails({ imgageURL, rating, observer }: MiniProductDetails) {
-    const ref = useRef<HTMLImageElement>(null);
-
-    useEffect(() => {
-        ref.current && observer?.observe(ref.current)
-
-        return () => {
-            ref.current && observer?.unobserve(ref.current)
-        }
-    }, [])
+function MiniProductDetails({ imgageURL, rating }: MiniProductDetails) {
 
     return (
         <div className="productThumbnail">
-            <img className='productImage' ref={ref} data-url={imgageURL} />
+            <img className='productImage' data-url={imgageURL} />
             <div className="rating">
                 <Icon src={StarIcon} fillColour='yellow' />
                 <span>{rating}/{window.config.maxRating}</span>

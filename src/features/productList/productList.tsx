@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { usePagination } from "../../_customHook";
 import { store, useAppSelector, type AppDispatch } from "../../store/store";
@@ -6,7 +6,7 @@ import FilterProduct from "../filterProduct/filterProduct";
 import MiniProductDetails from "../miniProductDetails/miniProductDetails";
 import Sort from "../sorting/sorting";
 import './productList.css';
-import { fetchProducts, type fetchProductsArg } from './store/hook';
+import { fetchProducts, type Product, type fetchProductsArg } from './store/hook';
 import { imagesBlobURL as imagesBlobURLAction } from "./store/slice";
 
 const limit = 20
@@ -19,20 +19,22 @@ export function ProductList() {
     const filter = useAppSelector(state => state.productList.filter);
     const sortBy = useAppSelector(state => state.productList.sortBy);
     const { paginationConfig, updatePaginationConfig } = usePagination(limit, productList.total)
+    const [transformmedProductList, setTransformmedProductList] = useState<Product[]>([]);
 
     const callback = useCallback(async (entries: IntersectionObserverEntry[], _: IntersectionObserver) => {
         const imagesBlobURL = store.getState().productList.imagesBlobURL;
         for (let entry of entries) {
             const { isIntersecting, target } = entry;
-            const imageURL = (target as HTMLImageElement).getAttribute("data-url") as any;
+            const imageEle = target.querySelector('img');
+            const imageURL = (imageEle as HTMLImageElement).getAttribute("data-url") as any;
             if (!imagesBlobURL[imageURL]?.isLoading && !imagesBlobURL[imageURL]?.URL && isIntersecting) {
                 useAppDispatch(imagesBlobURLAction({ imageURL, isLoading: true }));
                 const res = await fetch(imageURL);
                 const blobURL = URL.createObjectURL(await res.blob());
                 useAppDispatch(imagesBlobURLAction({ imageURL, isLoading: false, blobURL: blobURL }));
-                (target as HTMLImageElement).src = blobURL
+                (imageEle as HTMLImageElement).src = blobURL
             } else if (imagesBlobURL[imageURL]?.URL && isIntersecting) {
-                (target as HTMLImageElement).src = imagesBlobURL[imageURL].URL
+                (imageEle as HTMLImageElement).src = imagesBlobURL[imageURL].URL
             }
         }
     }, [])
@@ -40,11 +42,14 @@ export function ProductList() {
     useEffect(() => {
         const intersectionObserver = new IntersectionObserver(callback, { threshold: 0.1 });
         intersectionObserverRef.current = intersectionObserver;
+        const productsEle = document.querySelectorAll('.product')
+        productsEle.forEach(productEle => intersectionObserverRef.current?.observe(productEle))
 
         return () => {
+            productsEle.forEach(productEle => intersectionObserverRef.current?.unobserve(productEle))
             intersectionObserverRef.current?.disconnect();
         }
-    }, [JSON.stringify(productList.data)])
+    }, [JSON.stringify(transformmedProductList)])
 
     useEffect(() => {
         updatePaginationConfig(paginationConfig.offset, productList.total)
@@ -65,7 +70,7 @@ export function ProductList() {
         };
     }, [paginationConfig.offset])
 
-    const transformmedProductList = useMemo(() => {
+    useEffect(() => {
         //Filter the product first
         const categorySize = Object.keys(filter.category).length
         const filteredProduct = productList.data.filter((product) => {
@@ -86,7 +91,7 @@ export function ProductList() {
             }
             return b.price - a.price
         })
-        return filteredProduct;
+        setTransformmedProductList(filteredProduct);
     }, [JSON.stringify(productList.data), JSON.stringify(filter), sortBy]);
 
     const handleOnScrollEvent = (ev: any) => {
@@ -107,8 +112,8 @@ export function ProductList() {
                     transformmedProductList.map((product, i) => {
                         const { title, price, discountPercentage, rating, thumbnail } = product
                         return (
-                            <div className="product" key={i}>
-                                <MiniProductDetails observer={intersectionObserverRef.current} imgageURL={thumbnail} rating={rating} />
+                            <div className="product" key={i} >
+                                <MiniProductDetails imgageURL={thumbnail} rating={rating} />
                                 <div className="title" title={title}>{title}</div>
                                 <div className="priceDetails">
                                     <span>Rs.{price}</span>

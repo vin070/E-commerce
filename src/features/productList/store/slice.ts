@@ -42,7 +42,7 @@ const slice = createSlice({
     initialState: initialState,
     reducers: {
         filter: (state, { payload }: PayloadAction<initialStateType["filter"]>) => {
-            state.filter = payload
+            state.filter = { ...payload }
         },
         sort: (state, { payload }: PayloadAction<string>) => {
             state.sortBy = payload
@@ -57,7 +57,7 @@ const slice = createSlice({
         },
         category: (state, { payload }: PayloadAction<string[]>) => {
             const uniqueCategory = new Set([...payload, ...state.category]);
-            const updatedCategory = [];
+            const updatedCategory: initialStateType['category'] = [];
             for (let key of uniqueCategory.keys()) {
                 updatedCategory.push(key)
             }
