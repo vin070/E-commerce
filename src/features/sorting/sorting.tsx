@@ -23,7 +23,7 @@ function Sort() {
     }
 
     return (
-        <select onChange={(ev) => handleSortUpdate(ev.target.value)}>
+        <select data-testid="sortContainer" onChange={(ev) => handleSortUpdate(ev.target.value)}>
             {
                 sortingOptions.map((option, i) => {
                     const { text } = option

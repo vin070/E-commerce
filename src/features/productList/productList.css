@@ -52,3 +52,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.priceDetails {
+    display: flex;
+    gap: 4px;
+}
+
+.priceDetails div {
+    display: flex;
+}

@@ -116,8 +116,15 @@ export function ProductList() {
                                 <MiniProductDetails imgageURL={thumbnail} rating={rating} />
                                 <div className="title" title={title}>{title}</div>
                                 <div className="priceDetails">
-                                    <span>Rs.{price}</span>
-                                    <span>({discountPercentage}% OFF)</span>
+                                    <div className="price">
+                                        <span>Rs</span>
+                                        <span>{price}</span>
+                                    </div>
+
+                                    <div className="discount">(
+                                        <span>{discountPercentage}</span>
+                                        <span>% OFF</span>
+                                        )</div>
                                 </div>
                             </div>
                         )
