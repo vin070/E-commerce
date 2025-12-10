@@ -1,20 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function usePagination(limit: number, offset: number = 0, totalRecord: number = 0) {
-    const [paginationConfig, setPaginationConfig] = useState<{ limit: number, offset: number, totalRecord: number }>({ limit, offset, totalRecord });
+const usePagination = (limit: number, totalRecord: number = 0) => {
+    const [paginationConfig, setPaginationConfig] = useState<{ limit: number, offset: number, totalRecord: number }>({ limit, offset: 0, totalRecord });
+    const [totalPage, setTotalPage] = useState<number>(0);
 
-    //get total page  
-    const getTotalPage = () => {
-        return Math.ceil(paginationConfig.totalRecord / limit);
-    }
+    useEffect(() => {
+        setPaginationConfig((prev) => ({ ...prev, limit, totalRecord }))
+        setTotalPage(Math.ceil(totalRecord / limit));
+    }, [limit, totalRecord])
 
-    const updatePaginationConfig = (newOffset: number, totalRecord?: number) => {
-        const { limit } = paginationConfig;
-        //Offset to should be gte 0
-        newOffset = Math.max(0, newOffset);
-
-        newOffset = Math.min(newOffset, Math.max(0, (getTotalPage() - 1)) * limit);
-        setPaginationConfig({ ...paginationConfig, totalRecord: totalRecord ?? paginationConfig.totalRecord, offset: newOffset })
+    const updatePaginationConfig = (newOffset: number) => {
+        setPaginationConfig(prev => {
+            const { limit } = prev;
+            newOffset = Math.max(0, newOffset);
+            newOffset = Math.min(newOffset, Math.max(0, (totalPage - 1)) * limit);
+            return {
+                ...prev,
+                offset: newOffset
+            };
+        });
     }
 
     //Navigate to next page
@@ -35,11 +39,13 @@ export function usePagination(limit: number, offset: number = 0, totalRecord: nu
     }
 
     return {
+        totalPage,
         paginationConfig,
         navigateToNPage,
         navigateToNextPage,
         navigateToPreviousPage,
-        getTotalPage,
         updatePaginationConfig
     }
 }
+
+export default usePagination;
