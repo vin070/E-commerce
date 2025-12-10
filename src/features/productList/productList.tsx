@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { usePagination } from "../../_customHook";
+import usePagination from "../../_customHook/pagination";
+import throttle from "../../_functions/throttle";
 import { store, useAppSelector, type AppDispatch } from "../../store/store";
 import FilterProduct from "../filterProduct/filterProduct";
 import MiniProductDetails from "../miniProductDetails/miniProductDetails";
@@ -15,11 +16,22 @@ export function ProductList() {
     const useAppDispatch = useDispatch<AppDispatch>()
     const intersectionObserverRef = useRef<IntersectionObserver>(null);
 
-    const productList = useAppSelector(state => state.productList.data);
-    const filter = useAppSelector(state => state.productList.filter);
-    const sortBy = useAppSelector(state => state.productList.sortBy);
+    const { data: productList, sortBy, filter, loading } = useAppSelector(state => state.productList);
     const { paginationConfig, updatePaginationConfig } = usePagination(limit, productList.total)
     const [transformmedProductList, setTransformmedProductList] = useState<Product[]>([]);
+    const throttleFunctionRef = useRef<any>(null);
+    const productListEleRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        throttleFunctionRef.current = new (throttle as any)(productListEleRef.current, 'scroll', handleOnScrollEvent)
+        return () => throttleFunctionRef?.current?.destroy();
+    }, [JSON.stringify(paginationConfig)])
+
+    useEffect(() => {
+        if (!loading) {
+            throttleFunctionRef?.current?.updateIsCallbackExecutingStatus(false)
+        }
+    }, [loading])
 
     const callback = useCallback(async (entries: IntersectionObserverEntry[], _: IntersectionObserver) => {
         const imagesBlobURL = store.getState().productList.imagesBlobURL;
@@ -50,10 +62,6 @@ export function ProductList() {
             intersectionObserverRef.current?.disconnect();
         }
     }, [JSON.stringify(transformmedProductList)])
-
-    useEffect(() => {
-        updatePaginationConfig(paginationConfig.offset, productList.total)
-    }, [productList.total])
 
     //call fetch API when limit and offset changes
     useEffect(() => {
@@ -97,7 +105,8 @@ export function ProductList() {
     const handleOnScrollEvent = (ev: any) => {
         const { scrollTop, clientHeight, scrollHeight } = (ev.target as any)
         if (scrollTop + clientHeight >= scrollHeight - 100) {
-            updatePaginationConfig(paginationConfig.offset + limit, productList.total)
+            console.log(paginationConfig)
+            updatePaginationConfig(paginationConfig.offset + limit)
         }
     }
 
@@ -107,7 +116,7 @@ export function ProductList() {
                 <Sort />
                 <FilterProduct />
             </div>
-            <div id="productList" onScroll={ev => handleOnScrollEvent(ev)}>
+            <div id="productList" ref={productListEleRef}>
                 {
                     transformmedProductList.map((product, i) => {
                         const { title, price, discountPercentage, rating, thumbnail } = product
